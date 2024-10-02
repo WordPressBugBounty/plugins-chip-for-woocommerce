@@ -1,0 +1,1 @@
+# plugins-chip-for-woocommerce
