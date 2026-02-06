@@ -4,14 +4,170 @@ jQuery(($) => {
 		return false;
 	}
 
-  $('body').on('keypress', 'input.wc-credit-card-form-card-name', function(e) {
-    var $target, card, digit, length, re, upperLength, value;
-    digit = String.fromCharCode(e.which);
+  // Inject CSS styles for card brand icon
+  if (!document.getElementById('chip-card-brand-styles')) {
+    const styles = `
+      .chip-card-number-wrapper {
+        position: relative !important;
+        display: block !important;
+      }
+      .chip-card-number-wrapper input[type="tel"],
+      .chip-card-number-wrapper input.input-text {
+        padding-right: 60px !important;
+        box-sizing: border-box;
+      }
+      .chip-card-number-wrapper .chip-card-brand-icon {
+        position: absolute !important;
+        right: 10px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        width: 40px !important;
+        height: 25px !important;
+        object-fit: contain !important;
+        pointer-events: none !important;
+        z-index: 10 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+      }
+      .chip-card-number-wrapper .chip-card-brand-icon.chip-hidden {
+        display: none !important;
+      }
+    `;
+    const styleSheet = document.createElement('style');
+    styleSheet.id = 'chip-card-brand-styles';
+    styleSheet.textContent = styles;
+    document.head.appendChild(styleSheet);
+  }
+
+  // Card brand detection based on card number (BIN/IIN detection)
+  const detectCardBrand = (cardNumber) => {
+    const cleanNumber = cardNumber.replace(/\s/g, '');
+    if (!cleanNumber) return null;
+    if (/^4/.test(cleanNumber)) return 'visa';
+    if (/^5[1-5]/.test(cleanNumber) || /^2[2-7]/.test(cleanNumber)) return 'mastercard';
+    return null;
+  };
+
+  // Update card brand icon on card number input
+  const updateCardBrandIcon = ($input) => {
+    const cardNumber = $input.val();
+    const cardBrand = detectCardBrand(cardNumber);
+    const $wrapper = $input.closest('.chip-card-number-wrapper');
+    const $icon = $wrapper.find('.chip-card-brand-icon');
+    
+    if (cardBrand && gateway_option.card_logos_url) {
+      $icon.attr('src', gateway_option.card_logos_url + cardBrand + '.svg');
+      $icon.attr('alt', cardBrand);
+      $icon.removeClass('chip-hidden');
+    } else {
+      $icon.addClass('chip-hidden');
+    }
+  };
+
+  // Card number formatting - format as 1234 5678 9012 3456
+  $('body').on('input', 'input[id$="-card-number"]', function(e) {
+    var $target = $(this);
+    var value = $target.val();
+    
+    // Remove all non-digits
+    var cleaned = value.replace(/\D/g, '');
+    
+    // Limit to 16 digits
+    if (cleaned.length > 16) {
+      cleaned = cleaned.substring(0, 16);
+    }
+    
+    // Format with spaces every 4 digits
+    var formatted = cleaned.replace(/(\d{4})(?=\d)/g, '$1 ');
+    
+    // Only update if different to avoid cursor issues
+    if ($target.val() !== formatted) {
+      $target.val(formatted);
+    }
+    
+    // Update card brand icon
+    updateCardBrandIcon($target);
+  });
+
+  // Cardholder name validation - only allow [a-zA-Z \'\.\-]
+  $('body').on('keypress', 'input[id$="-card-name"]', function(e) {
+    var digit = String.fromCharCode(e.which);
     var regex = new RegExp("[a-zA-Z \'\.\-]+$");
     if (!regex.test(digit)) {
       e.preventDefault();
     }
-	});
+  });
+
+  // Expiry field formatting - auto-format as MM / YY
+  $('body').on('input', 'input[id$="-card-expiry"]', function(e) {
+    var $target = $(this);
+    var value = $target.val();
+    
+    // Remove all non-digits
+    var cleaned = value.replace(/\D/g, '');
+    
+    // Limit to 4 digits (MMYY)
+    if (cleaned.length > 4) {
+      cleaned = cleaned.substring(0, 4);
+    }
+    
+    // Format as MM / YY
+    var formatted = '';
+    if (cleaned.length >= 2) {
+      formatted = cleaned.substring(0, 2) + ' / ' + cleaned.substring(2);
+    } else {
+      formatted = cleaned;
+    }
+    
+    // Only update if different to avoid cursor issues
+    if ($target.val() !== formatted) {
+      $target.val(formatted);
+    }
+  });
+
+  // Prevent non-numeric input on expiry field
+  $('body').on('keypress', 'input[id$="-card-expiry"]', function(e) {
+    var charCode = e.which ? e.which : e.keyCode;
+    // Allow: backspace, delete, tab, escape, enter, and numbers
+    if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 27 || charCode === 46) {
+      return true;
+    }
+    // Allow numbers only
+    if (charCode < 48 || charCode > 57) {
+      e.preventDefault();
+      return false;
+    }
+    return true;
+  });
+
+  // CVC field - only allow numeric input
+  $('body').on('keypress', 'input[id$="-card-cvc"]', function(e) {
+    var charCode = e.which ? e.which : e.keyCode;
+    // Allow: backspace, delete, tab, escape, enter, and numbers
+    if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 27 || charCode === 46) {
+      return true;
+    }
+    // Allow numbers only
+    if (charCode < 48 || charCode > 57) {
+      e.preventDefault();
+      return false;
+    }
+    return true;
+  });
+
+  // CVC field - remove non-numeric characters on input
+  $('body').on('input', 'input[id$="-card-cvc"]', function(e) {
+    var $target = $(this);
+    var value = $target.val();
+    var cleaned = value.replace(/\D/g, '');
+    if (cleaned.length > 4) {
+      cleaned = cleaned.substring(0, 4);
+    }
+    if ($target.val() !== cleaned) {
+      $target.val(cleaned);
+    }
+  });
 
   $('form.checkout').on('checkout_place_order_'+gateway_option.id, function(event, wc_checkout_form) {
     // if ($('input[name="wc-' + gateway_option.id + '-payment-token"]:checked').val() != 'new') {
@@ -68,7 +224,8 @@ jQuery(($) => {
     }
 
     var card_expiry = $('#' + gateway_option.id + '-card-expiry').val();
-    var card_no_space_expiry = card_expiry.replaceAll(' ', '');
+    // Remove spaces only, keeping slash for MM/YY format
+    var card_no_space_expiry = card_expiry.replace(/\s/g, '');
 
     if (wc_checkout_form.get_payment_method() == gateway_option.id && $('.wc-payment-form').is(":visible")) {
       if(result.result == 'success') {
@@ -77,6 +234,11 @@ jQuery(($) => {
         form += '<input type="hidden" name="card_number" value="'+$('#' + gateway_option.id + '-card-number').val()+'">';
         form += '<input type="hidden" name="expires" value="'+card_no_space_expiry+'">';
         form += '<input type="hidden" name="cvc" value="'+$('#' + gateway_option.id + '-card-cvc').val()+'">';
+        
+        // Check if customer wants to save the card.
+        var save_card_checkbox = $('#wc-' + gateway_option.id + '-new-payment-method');
+        var remember_card = (save_card_checkbox.length && save_card_checkbox.is(':checked')) ? 'on' : 'off';
+        form += '<input type="hidden" name="remember_card" value="'+remember_card+'">';
         
         $('<form action="'+redirect_location+'" method="POST">'+form+'</form>').appendTo('body').submit();
       }

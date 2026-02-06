@@ -1,5 +1,63 @@
 == Changelog ==
 
+= 2.0.2 2026-02-05 =
+* Fixed - Subscription payment method change when customer chooses new card instead of saved card. Resolved ID mismatch between order-pay path and change_payment_method parameter used by WooCommerce Subscriptions.
+* Fixed - Redirect to CHIP checkout URL blocked by wp_safe_redirect when changing subscription payment method. Added allowed_redirect_hosts filter to permit CHIP gateway domain.
+
+= 2.0.1 2026-01-07 =
+* Added - MBSB Bank to FPX bank list.
+* Added - FPX B2B1 standalone logo option.
+* Updated - FPX B2C standalone logo option.
+
+= 2.0.0 2026-01-06 =
+* Changed - Refactored codebase with improved class structure for WordPress coding standards compliance.
+* Changed - Renamed global constants WC_CHIP_ROOT_URL and WC_CHIP_FPX_ROOT_URL to CHIP_ROOT_URL and CHIP_FPX_ROOT_URL.
+* Changed - Changed hook prefixes from wc_ to chip_ with backward compatibility using _deprecated_hook().
+* Changed - CVC input now hidden (password type) in both legacy and blocks checkout.
+* Changed - Simplified client creation by removing explicit client_id management.
+* Changed - Only update order status to Failed when order is in Pending Payment status.
+* Added - Filter chip_blocks_payment_method_data for blocks payment method customization.
+* Added - REST API endpoint for lazy loading FPX banks and e-wallets (GET /chip/v1/banks/).
+* Added - Direct POST card payments support for WooCommerce Blocks checkout.
+* Added - Card form component with validation for WooCommerce Blocks.
+* Added - Expiry formatting (MM/YY) for legacy checkout card form.
+* Added - Card number formatting with spaces every 4 digits for legacy checkout.
+* Added - Save card option (remember_card) parameter for both legacy and blocks checkout.
+* Added - PostgreSQL compatibility for database locking.
+* Added - Void payment functionality for pre-authorized payments.
+* Added - Capture payment functionality for pre-authorized payments.
+* Added - Card brand logos (Visa/Mastercard) display in card number input field.
+* Added - Bank/e-wallet logos display next to selected option in dropdown.
+* Added - Purchase ID history tracking for multiple payment attempts on same order.
+* Added - Purchase ID included in log messages for better debugging.
+* Added - ABSPATH security check to all PHP files.
+* Improved - WooCommerce Blocks integration with recommended patterns.
+* Improved - canMakePayment now checks currency support and payment requirements.
+* Improved - Bank/e-wallet lists now lazy loaded via AJAX for better performance.
+* Improved - Expiry and CVC fields now have equal width styling in blocks checkout.
+* Improved - Code quality with PHPCS compliance fixes.
+* Fixed - Saved card payments in WooCommerce Blocks checkout.
+* Fixed - Direct POST redirect behavior consistency in blocks checkout.
+* Removed - Metabox AJAX handler and related features.
+* Removed - Update client information option and patch_client functionality.
+* Removed - Disable clients API option.
+* Removed - Force tokenization setting.
+* Removed - Webhook public key option and related webhook handling.
+* Removed - get_client_by_email function (now relies on automatic client creation).
+* Removed - CHIP Invoice, Receipt, and Feed buttons from order admin page.
+
+= 1.8.5 2025-12-08 =
+* Fixed - Fix issue when card set with Google Pay together with Bypass CHIP payment page option for add card.
+
+= 1.8.4 2025-12-08 =
+* Fixed - Fix issue when card set with Google Pay together with Bypass CHIP payment page option.
+
+= 1.8.3 2025-11-17 =
+* Added - Support for Google Pay
+
+= 1.8.2 2025-11-04 =
+* Fixed - Issue with add_meta_box when function is unavailable
+
 = 1.8.1 2025-09-18 =
 * Changed - Modified message when checkout failed to automatically redirect
 
@@ -112,7 +170,7 @@
 * Added - Now bypass payment page for FPX will be based on banks availability.
 
 = 1.3.9 2023-07-21 =
-* Added   - Support for $0 initial checkout.
+* Added   - Support for RM0 initial checkout.
 * Changed - Set redirect parameter to direct_post_url for Visa/Mastercard payment method
 * Fixed   - Error after payment for admin after making payment
 * Fixed   - Missing client if the order created through dashboard
@@ -161,7 +219,7 @@
 = 1.3.0 2023-03-13 =
 * Added   - Add support for WooCommerce Subscription
 * Added   - Hook token deletion with CHIP
-* Added   - WC_Gateway_Chip can be extended for cloning
+* Added   - Chip_Woocommerce_Gateway can be extended for cloning
 * Added   - Now CHIP payment have 4 payment method by default
 * Added   - Support for whitelisting payment method
 * Added   - Purchase due strict is now configurable
@@ -198,7 +256,7 @@
 
 = 1.2.3 2022-12-15 =
 * Added   - Add maestro as card group
-* Added   - Constant WC_CHIP_OLD_URL_SCHEME for switch to old URL scheme
+* Added   - Constant CHIP_WOOCOMMERCE_OLD_URL_SCHEME for switch to old URL scheme
 * Changed - Redirect URL using new URL scheme
 
 = 1.2.2 2022-11-25 =

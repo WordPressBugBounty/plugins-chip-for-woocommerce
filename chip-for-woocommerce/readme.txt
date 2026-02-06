@@ -2,40 +2,67 @@
 Contributors: chipasia, wanzulnet, awisqirani, amirulazreen
 Tags: chip
 Requires at least: 6.3
-Tested up to: 6.8
-Stable tag: 1.8.1
+Tested up to: 6.9
+Stable tag: 2.0.2
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-CHIP - Digital Finance Platform. Securely accept one-time and subscription payment with CHIP for WooCommerce.
+CHIP - Digital Finance Platform. Securely accept one-time and subscription payments with CHIP for WooCommerce.
 
 == Description ==
 
-This is an official CHIP plugin for WooCommerce.
+**CHIP for WooCommerce** is the official payment gateway plugin that connects your WooCommerce store to CHIP's powerful Digital Finance Platform. Accept payments seamlessly with Malaysia's leading payment methods.
+
+= Why Choose CHIP for WooCommerce? =
+
+* **WooCommerce Blocks Support** - Fully compatible with the new WooCommerce Blocks checkout experience
+* **Multiple Payment Methods** - Accept FPX, Credit/Debit Cards, DuitNow QR, E-Wallets, and more
+* **Subscription Payments** - Native support for WooCommerce Subscriptions
+* **Tokenization** - Allow customers to save cards for faster checkout
+* **Direct Post Integration** - Secure card payments without redirecting customers
+* **Pre-Orders Support** - Works seamlessly with WooCommerce Pre-Orders
+* **Authorize & Capture** - Delay capture for card payments until order fulfillment
+
+= Supported Payment Methods =
+
+* **FPX** - Malaysia's #1 online banking payment
+* **FPX B2B1** - Corporate online banking
+* **Credit/Debit Cards** - Visa, Mastercard, Maestro
+* **DuitNow QR** - Malaysia's national QR payment
+* **E-Wallets** - GrabPay, Touch 'n Go, Boost, and more via Razer
+
+= About CHIP =
 
 CHIP is a comprehensive Digital Finance Platform specifically designed to support and empower Micro, Small and Medium Enterprises (MSMEs). We provide a suite of solutions encompassing payment collection, expense management, risk mitigation, and treasury management.
 
-Our aim is to help businesses streamline their financial processes, reduce operational complexity, and drive growth.
+Our aim is to help businesses streamline their financial processes, reduce operational complexity, and drive growth. With CHIP, you gain a financial partner committed to simplifying, digitizing, and enhancing your financial operations for ultimate success.
 
-With CHIP, you gain a financial partner committed to simplifying, digitizing, and enhancing your financial operations for ultimate success.
+= Documentation =
 
-This plugin will enable your WooCommerce site to be integrated with CHIP as per documented in [API Documentation](https://docs.chip-in.asia).
-
-The plugins do includes support for WooCommerce Subscription products.
+Integrate your WooCommerce site with CHIP as documented in our [API Documentation](https://docs.chip-in.asia).
 
 == Screenshots ==
-* Fill up the form with Brand ID and Secret Key. Tick Enable API and Save changes to activate.
-* Checkout and pay with CHIP
-* CHIP payment page
-* WooCommerce order received page
-* WooCommerce dashboard order page
-* WooCommerce refund order
+
+1. Gateway configuration - Enter your Brand ID and Secret Key to connect with CHIP.
+2. Payment gateways overview - All CHIP payment gateways available in WooCommerce Payments settings.
+3. Payment method settings - Configure accepted payment methods and card options.
+4. Card payment form (Legacy) - Secure card input with Visa/Mastercard brand detection.
+5. FPX bank selection - Choose from available Malaysian banks with status indicators.
+6. WooCommerce Blocks checkout - Modern checkout experience with card payment support.
+7. Saved cards selection - Returning customers can pay with saved cards.
+8. CHIP payment page - Secure hosted checkout for completing payment.
+9. Order confirmation - Customer receives order confirmation after successful payment.
+10. Order admin panel - View payment details including card brand and Purchase ID.
+11. Capture payment - Capture pre-authorized payments when ready to fulfill.
+12. Refund order - Process full or partial refunds directly from WooCommerce.
+13. Site Health integration - Verify CHIP API connection status in WordPress Site Health.
 
 == Changelog ==
 
-= 1.8.1 2025-09-18 =
-* Changed - Modified message when checkout failed to automatically redirect
+= 2.0.2 2026-02-05 =
+* Fixed - Subscription payment method change when customer chooses new card instead of saved card. Resolved ID mismatch between order-pay path and change_payment_method parameter used by WooCommerce Subscriptions.
+* Fixed - Redirect to CHIP checkout URL blocked by wp_safe_redirect when changing subscription payment method. Added allowed_redirect_hosts filter to permit CHIP gateway domain.
 
 [See changelog for all versions](https://raw.githubusercontent.com/CHIPAsia/chip-for-woocommerce/main/changelog.txt).
 
@@ -52,9 +79,9 @@ The plugins do includes support for WooCommerce Subscription products.
 
 = Automatic installation =
 
-Automatic installation is the easiest option -- WordPress will handle the file transfer, and you won’t need to leave your web browser. To do an automatic install of WooCommerce, log in to your WordPress dashboard, navigate to the Plugins menu, and click “Add New.”
+Automatic installation is the easiest option -- WordPress will handle the file transfer, and you won't need to leave your web browser. To do an automatic install of CHIP for WooCommerce, log in to your WordPress dashboard, navigate to the Plugins menu, and click "Add New."
 
-In the search field type “CHIP for WooCommerce,” then click “Search Plugins.” Once you’ve found us,  you can view details about it such as the point release, rating, and description. Most importantly of course, you can install it by! Click “Install Now,” and WordPress will take it from there.
+In the search field type "CHIP for WooCommerce," then click "Search Plugins." Once you've found us, you can view details about it such as the point release, rating, and description. Most importantly of course, you can install it! Click "Install Now," and WordPress will take it from there.
 
 = Manual installation =
 
@@ -68,59 +95,101 @@ Automatic updates should work smoothly, but we still recommend you back up your 
 
 = Where is the Brand ID and Secret Key located? =
 
-Brand ID and Secret Key available through our merchant dashboard.
+Brand ID and Secret Key are available through our [merchant dashboard](https://gate.chip-in.asia). Navigate to Developer > Credentials after logging in.
 
-= Do I need to set public key for webhook? =
+= What currencies are supported? =
 
-Optional. You may set the public key for webhook to synchronize the card token availability.
+CHIP for WooCommerce supports MYR (Malaysian Ringgit) as the primary currency. Contact CHIP support for multi-currency options.
+
+= Is this plugin compatible with WooCommerce Blocks? =
+
+Yes! CHIP for WooCommerce fully supports the new WooCommerce Blocks checkout experience, including card payments, saved cards, and all payment methods.
+
+= Can customers save their cards for future purchases? =
+
+Yes. Enable "Allow Customers to Save Cards" in the gateway settings. Customers can then save their Visa, Mastercard, or Maestro cards for faster checkout.
+
+= Why is my order showing "On Hold" status? =
+
+Orders with "On Hold" status have pre-authorized payments awaiting capture. Go to the order page and click "Capture Payment" when ready to charge the customer.
+
+= How do I capture a pre-authorized payment? =
+
+Navigate to WooCommerce > Orders, open the order, and click the "Capture Payment" button in the order actions section. You can also enable auto-capture when order status changes to Processing or Completed.
+
+= Does this work with WooCommerce Subscriptions? =
+
+Yes! CHIP for WooCommerce supports WooCommerce Subscriptions with automatic recurring payments using saved cards.
+
+= Does this work with WooCommerce Pre-Orders? =
+
+Yes. Pre-Orders are supported with card tokenization. The saved card will be charged when the pre-order is released.
+
+= Payment failed but money was deducted from my account? =
+
+This is usually a temporary hold by your bank. If payment failed on CHIP's end, the hold will be released automatically within 1-7 business days depending on your bank.
+
+= Why can't I see the CHIP payment option at checkout? =
+
+Check the following:
+
+1. Plugin is activated and gateway is enabled
+2. Brand ID and Secret Key are correctly configured
+3. Your store currency is supported (MYR)
+4. Check Site Health (Tools > Site Health) for API connection status
+
+= Is card data stored on my server? =
+
+No. Card data is processed directly by CHIP's secure servers. Your WooCommerce store never handles or stores sensitive card information, ensuring PCI compliance.
+
+= Are there any transaction fees? =
+
+Transaction fees are determined by your CHIP merchant agreement. Contact CHIP sales for pricing details.
 
 = Where can I find documentation? =
 
-You can visit our [API documentation](https://docs.chip-in.asia/) for your reference.
+Visit our [API documentation](https://docs.chip-in.asia/) for technical reference.
 
-= What CHIP API services used in this plugin? =
+= What CHIP API services are used in this plugin? =
 
-This plugin rely on CHIP API ([WC_CHIP_ROOT_URL](https://gate.chip-in.asia)) as follows:
+**CHIP API** – `CHIP_ROOT_URL` (https://gate.chip-in.asia)
 
-  - **/payment_methods/**
-    - This is for getting available payment method specific to your account
-  - **/purchases/**
-    - This is for accepting payment
-  - **/purchases/<id\>/**
-    - This is for getting payment status from CHIP
-  - **/purchases/<id\>/refund/**
-    - This is for refunding payment
-  - **/purchases/<id\>/charge/**
-    - This is for charging payment with token
-  - **/purchases/<id\>/delete_recurring_token/**
-    - This is for deleting card token
-  - **/clients/**
-    - This is for creating clients in CHIP
-  - **/clients/?q=<email\>**
-    - This is for getting client in CHIP with email
-  - **/clients/<id\>/**
-    - This to get client and patch client information
+*Payment Operations:*
 
-Additionally, for FPX Bank status, this plugin rely on CHIP API ([WC_CHIP_FPX_ROOT_URL](https://api.chip-in.asia/health_check)) as follows:
+- `/purchases/` – Create payment
+- `/purchases/{id}/` – Get payment status
+- `/purchases/{id}/refund/` – Refund payment
+- `/purchases/{id}/capture/` – Capture pre-authorized payment
+- `/purchases/{id}/release/` – Release pre-authorized payment
 
-  - **/fpx_b2c**
-    - This is for getting FPX B2C status
-  - **/fpx_b2b1**
-    - This is for getting FPX B2B1 status
+*Card Token Operations:*
+
+- `/purchases/{id}/charge/` – Charge saved card
+- `/purchases/{id}/delete_recurring_token/` – Delete saved card
+
+*Other:*
+
+- `/payment_methods/` – Get available payment methods
+- `/clients/` – Create clients
+
+**FPX Health Check API** – `CHIP_FPX_ROOT_URL` (https://api.chip-in.asia/health_check)
+
+- `/fpx_b2c` – FPX B2C bank status
+- `/fpx_b2b1` – FPX B2B1 bank status
 
 = How to clone CHIP for WooCommerce? =
 
-Create new class and extend **WC_Gateway_Chip** or **WC_Gateway_Chip_Subscription** with own class.
+Create a new class that extends **Chip_Woocommerce_Gateway** with your own customizations.
 
-Then, hook it with filter **woocommerce_payment_gateways** and pass the method own class name to it.
+Then, hook it with filter **woocommerce_payment_gateways** and pass your class name to it.
 
-You may refer to **includes/clone-wc-gateway-chip.php** file for example.
+Refer to **includes/class-chip-woocommerce-gateway-2.php** for an example.
 
-= How to remove the additional payment method? =
+= How to remove additional payment methods? =
 
-Create a PHP constant in your wp-config.php file with the following code:
+Add this constant to your wp-config.php file:
 
-`define( 'DISABLE_CLONE_WC_GATEWAY_CHIP' , true );`
+`define( 'CHIP_WOOCOMMERCE_DISABLE_GATEWAY_CLONES', true );`
 
 == Links ==
 
