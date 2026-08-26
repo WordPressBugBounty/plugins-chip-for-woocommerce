@@ -3,7 +3,7 @@ Contributors: chipasia, wanzulnet, awisqirani, amirulazreen
 Tags: chip
 Requires at least: 6.3
 Tested up to: 7.1
-Stable tag: 2.1.1
+Stable tag: 2.1.3
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -62,10 +62,9 @@ Integrate your WooCommerce site with CHIP as documented in our [API Documentatio
 
 == Changelog ==
 
-= 2.1.1 2026-08-23 =
-* Added - Additional charges (fixed and percentage fees) are now shown on the checkout page before payment, so customers see the exact amount they will be charged. The fee is applied via the cart when a CHIP gateway with additional charges enabled is selected, mirroring the order fee added at payment time.
-* Changed - Updated the plugin description to list all supported payment methods (Atome, ShopeePay, Maybank QRPay, Crypto Coin) and removed the incorrect "Boost" e-wallet reference.
-* Changed - Bumped "Tested up to" to WordPress 7.1.
+= 2.1.3 2026-08-26 =
+* Fixed - The additional-charges fee is no longer double-counted on the order. The cart fee is already copied to the order by WooCommerce, so the plugin no longer adds it a second time during checkout.
+* Fixed - The percentage-based additional charge no longer triggers a "string * int" fatal error by casting the cart contents total to a float.
 
 [See changelog for all versions](https://raw.githubusercontent.com/CHIPAsia/chip-for-woocommerce/main/changelog.txt).
 
